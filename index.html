@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Plano 3D · 4 apartamentos · lote 12 × 20 m</title>
+<link href="https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9e6e0;--fg:#1f2a36;--card:rgba(250,248,244,.95);--bd:#c9c3b8;--ac:#b5651d;--sc:0xe4e0d8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a222b;--fg:#ece7de;--card:rgba(28,37,48,.95);--bd:#41505f;--ac:#d98a45}}
+:root[data-theme="dark"]{--bg:#1a222b;--fg:#ece7de;--card:rgba(28,37,48,.95);--bd:#41505f;--ac:#d98a45}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font:14px system-ui,sans-serif;overflow:hidden}
+#c{position:fixed;inset:0;width:100%;height:100%;touch-action:none;display:block}
+#p{position:fixed;top:calc(52px + env(safe-area-inset-top,0px));left:8px;width:290px;max-width:calc(100% - 16px);max-height:calc(100% - 70px - env(safe-area-inset-top,0px));overflow:auto;background:var(--card);border:1px solid var(--bd);border-top:3px solid var(--ac);border-radius:6px;padding:8px 10px;backdrop-filter:blur(6px)}
+#p.h{display:none}
+#top{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;height:44px;display:flex;align-items:center;gap:8px;padding:0 8px;background:var(--card);border-bottom:1px solid var(--bd);z-index:5}
+#top b{font-size:13px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sig{font-family:'Metal Mania',Impact,cursive;text-transform:uppercase;letter-spacing:1px;color:var(--ac)}
+#sg{position:fixed;right:10px;bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:18px;opacity:.9;pointer-events:none}
+.tabs{display:flex;gap:3px;margin-bottom:6px}
+.tabs button{flex:1;margin:0;padding:6px 2px;font-size:12px}
+.tabs button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+button{margin:5px 4px 0 0;padding:6px 9px;border:1px solid var(--bd);border-radius:4px;background:transparent;color:var(--fg);cursor:pointer;font:inherit}
+label{display:block;margin:7px 0 0;font-size:12px}
+input[type=range]{width:100%}input[type=number]{width:60px}
+textarea{width:100%;height:60px;box-sizing:border-box;font-size:11px;background:transparent;color:var(--fg);border:1px solid var(--bd)}
+.s{display:none}.s.on{display:block}
+table{width:100%;font-size:12px;border-collapse:collapse}td{padding:2px 0;border-bottom:1px solid var(--bd)}td:last-child{text-align:right}
+small{opacity:.7;font-size:11px;display:block;margin-top:6px}
+#wk{position:fixed;inset:auto 0 calc(14px + env(safe-area-inset-bottom,0px)) 0;display:none;justify-content:center;gap:10px;z-index:6}
+#wk button{width:56px;height:56px;font-size:22px;background:var(--card)}
+</style></head><body>
+<canvas id="c"></canvas>
+<div id="top"><button id="m" style="margin:0">☰</button><b id="ttl">Lote 12 × 20 m · 4 aptos</b><span class="sig" style="font-size:16px">D4RKKR15T . MURCIA🦇</span></div>
+<div id="sg" class="sig">D4RKKR15T . MURCIA🦇</div>
+<div id="wk"><button id="wl">⟲</button><button id="wf">▲</button><button id="wb">▼</button><button id="wr">⟳</button><button id="wx" style="font-size:13px">Salir</button></div>
+<div id="p">
+<div class="tabs"><button data-t="a" class="on">Proyecto</button><button data-t="b">Pisos</button><button data-t="c">Editar</button><button data-t="d">Áreas</button></div>
+
+<div class="s on" id="s_a">
+<button id="n0">Nuevo en blanco</button><button id="n1">Desde este plano</button>
+<label>Lote: <input type="number" id="nw" value="12" min="4" max="40"> × <input type="number" id="nl" value="20" min="4" max="60"> m (para el nuevo en blanco)</label>
+<label>Ancho pasillo: <b id="v_cw"></b> m<input type="range" id="cw" min="1.5" max="4" step=".1" value="2.4"></label>
+<label>Fondo parqueadero: <b id="v_pd"></b> m<input type="range" id="pd" min="3" max="8" step=".5" value="4"></label>
+<label>Ancho portón: <b id="v_gate"></b> m<input type="range" id="gate" min="2" max="6" step=".5" value="3"></label>
+<label>Altura de piso: <b id="v_H"></b> m<input type="range" id="H" min="2.4" max="3.2" step=".1" value="2.6"></label>
+<button id="rg">Regenerar piso actual con estas medidas</button>
+<label><input type="checkbox" id="lab" checked> Etiquetas de cuartos</label>
+<button id="b1">Aérea</button><button id="b2">Frente</button><button id="b3">Planta</button><button id="b4">🚶 Recorrer</button>
+<hr style="border:0;border-top:1px solid var(--bd)">
+<button id="sv">Guardar</button><button id="cp">Copiar código</button><button id="ld">Cargar código</button>
+<textarea id="code" placeholder="Pega aquí un código para cargar un proyecto compartido"></textarea>
+<small id="msg"></small>
+</div>
+
+<div class="s" id="s_b"><div id="fl"></div>
+<button id="f1">+ Piso (copia del actual)</button><button id="f0">+ Piso en blanco</button><button id="fd">− Quitar piso actual</button>
+<label><input type="checkbox" id="allf" checked> Ver pisos inferiores</label></div>
+
+<div class="s" id="s_c">
+<label><input type="checkbox" id="em"> ✏️ <b>Modo edición</b></label>
+<div id="ed" style="display:none"><div id="sel" style="font-size:12px;margin-top:6px"></div>
+<button id="e_rot">Girar</button><button id="e_del">Eliminar</button><button id="e_dup">Duplicar</button><button id="e_und">Deshacer</button>
+<label>Color / acabado: <input type="color" id="col" value="#a9774b"></label>
+<div id="rz" style="display:none"><label>Ancho (← →): <b id="v_rw"></b> m<input type="range" id="rw" min=".05" max="20" step=".05"></label><label>Largo (▲ ▼): <b id="v_rd"></b> m<input type="range" id="rd" min=".05" max="20" step=".05"></label><label>Alto: <b id="v_rh"></b> m<input type="range" id="rh" min=".02" max="4" step=".02"></label></div>
+<div style="font-size:12px;margin-top:6px">Mover 0,1 m (▲ hacia la calle):</div><div id="nd"></div>
+<div id="sw" style="margin-top:4px"></div>
+<div style="font-size:12px;margin-top:8px">Agregar:</div><div id="add"></div>
+<small>Toca un objeto y arrástralo. Solo se editan los objetos del piso actual.</small></div></div>
+
+<div class="s" id="s_d"><div id="ar"></div></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('c'),R=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+R.setPixelRatio(Math.min(devicePixelRatio,2));R.shadowMap.enabled=true;
+const S=new THREE.Scene(),cam=new THREE.PerspectiveCamera(45,1,.1,300);cam.rotation.order='YXZ';
+S.add(new THREE.HemisphereLight(0xffffff,0x8899aa,.8));
+const sun=new THREE.DirectionalLight(0xffffff,.8);sun.position.set(-10,30,-8);sun.castShadow=true;
+Object.assign(sun.shadow.camera,{left:-25,right:25,top:25,bottom:-25});sun.shadow.mapSize.set(2048,2048);S.add(sun,sun.target);
+const G=new THREE.Group();S.add(G);
+const dk=matchMedia('(prefers-color-scheme:dark)').matches&&document.documentElement.dataset.theme!=='light';
+S.background=new THREE.Color(dk?0x1a222b:0xe4e0d8);
+const mats={};const M=c=>mats[c]||(mats[c]=new THREE.MeshLambertMaterial({color:c}));
+const HL=new THREE.MeshLambertMaterial({color:0xffa500,emissive:0x884400});
+let PR={W:12,L:20,cw:2.4,pd:4,gate:3,H:2.6,floors:[[]]},cur=0,EM=false,selI=-1,hist=[],drag=null,WK=false;
+const RC=new THREE.Raycaster(),GP=new THREE.Plane(new THREE.Vector3(0,1,0),0);
+const it=(x,z,w,d,h,y,c,n)=>({k:'b',x,z,w,d,h,y:y||0,c,n:n||'Objeto',r:0});
+let GPN=0;function wl(a,x1,z1,x2,z2,H,doors,c,t,n){const i0=a.length,gp=++GPN;t=t||.15;c=c||0xf5f1ea;
+ const hz=z1===z2,len=Math.abs(hz?x2-x1:z2-z1),dir=(hz?x2-x1:z2-z1)>0?1:-1;
+ const seg=(s,e,yy,hh)=>{if(e-s<.01)return;const m=dir*(s+e)/2;a.push(hz?it(x1+m,z1,e-s,t,hh,yy,c,n||'Pared'):it(x1,z1+m,t,e-s,hh,yy,c,n||'Pared'))};
+ (doors||[]).forEach(d=>{if(H<2.2)return;const o=hz?it(x1+dir*d[0],z1,d[1],t,2.1,0,0x8b5a2b,'Puerta'):it(x1,z1+dir*d[0],t,d[1],2.1,0,0x8b5a2b,'Puerta');o.dr=1;a.push(o)});let c0=0;(doors||[]).map(d=>[d[0]-d[1]/2,d[0]+d[1]/2]).sort((p,q)=>p[0]-q[0]).forEach(d=>{seg(c0,d[0],0,H);seg(d[0],d[1],2.1,H-2.1);c0=d[1]});seg(c0,len,0,H);for(let i=i0;i<a.length;i++)a[i].gp=gp}
+function gen(){const {W,L,cw,pd,gate,H}=PR,a=[],sw=(W-cw)/2,D=(L-pd)/2;
+ a.push({k:'r',x:W/2,z:pd/2,w:W,d:pd,c:0xa0a4a8,n:'Parqueadero'},{k:'r',x:W/2,z:pd+(L-pd)/2,w:cw,d:L-pd,c:0xd9d2c3,n:'Pasillo',na:1});
+ wl(a,0,0,W,0,2.4,[[W/2,gate]],0xe3dccf,.2,'Muro frente');wl(a,0,0,0,pd,2.4,[],0xe3dccf,.2);wl(a,W,0,W,pd,2.4,[],0xe3dccf,.2);
+ a.push(it(W/2,0,gate,.08,2.1,0,0x1f3b5c,'Portón'));
+ const rows=Math.max(1,Math.floor((pd-1.2)/2.1)),per=Math.floor((sw-.2)/.8);
+ [-1,1].forEach(sd=>{for(let r=0;r<rows;r++)for(let i=0;i<per;i++){const u=.5+i*.8;a.push({k:'m',x:sd<0?u:W-u,z:pd-1.15-r*2.1,r:0,n:'Moto'})}});
+ [-1,1].forEach(sd=>[0,1].forEach(k=>{
+  const X=u=>sd<0?u:W-u,za=pd+k*D,zb=za+D,bd=sw*.5,bu=sw*.68,bw=sw-sw*.68,s1=D*.375,s2=D*.575,nm=(sd<0?'A':'B')+(k+1);
+  const w3=(u1,z1,u2,z2,d)=>wl(a,X(u1),z1,X(u2),z2,H,d);
+  w3(0,za,0,zb);w3(0,za,sw,za);if(k)w3(0,zb,sw,zb);w3(sw,za,sw,zb,[[1.5,1]]);w3(0,za+s1,bw,za+s1);
+  w3(0,za+s2,sw,za+s2,[[bd*.5,.8],[bd+(bu-bd)*.5,.8]]);w3(bw,za+s1,bw,za+s2,[[(s2-s1)/2,.7]]);w3(bd,za+s2,bd,zb);
+  const room=(n,u1,u2,z1,z2,c)=>a.push({k:'r',x:(X(u1)+X(u2))/2,z:(z1+z2)/2,w:u2-u1,d:z2-z1,c,n:n+' '+nm});
+  room('Sala-comedor',0,sw,za,za+s1,0xe8d9b5);room('Baño',0,bw,za+s1,za+s2,0xbcd9e6);room('Cocina',bw,sw,za+s1,za+s2,0xdde6d0);room('Hab. 1',0,bd,za+s2,zb,0xf0c9c9);room('Hab. 2',bd,sw,za+s2,zb,0xc9e0c9);
+  const f=(n,u,z,w,d,h,c,y)=>a.push(it(X(u),z,w,d,h,y,c,n));
+  f('Sofá',sw*.4,za+.55,2,.9,.45,0x5d6d7e);f('Mesa de centro',sw*.4,za+1.6,1,.5,.35,0x8b6b4a);f('Mueble TV',.2,za+1.7,.4,1.2,.5,0x333333);f('TV',.12,za+1.7,.06,.9,.5,0x111111,.8);
+  f('Mesa comedor',sw-.9,za+2.3,.8,.8,.75,0xa9774b);[[-.5,0],[.5,0],[0,-.5],[0,.5]].forEach(o=>f('Silla',sw-.9+o[0],za+2.3+o[1],.3,.3,.45,0x7a5233));
+  const kz=za+s1+.3;f('Cocina integral',bw+bu/2,kz,bu,.6,1.8,0xb08968);a[a.length-1].mx=sd>0;
+  f('Ducha',.4,za+s1+.4,.8,.8,.05,0x85c1e9);f('Sanitario',.2,za+s2-.35,.4,.6,.4,0xffffff);a[a.length-1].r=Math.PI;f('Lavamanos',bw-.3,za+s1+.3,.4,.5,.8,0xffffff);
+  [[0,bd,-1],[bd,sw,1]].forEach(([uA,uB,cs])=>{const b=(uA+uB)/2-cs*.25;f('Cama',b,zb-1,1.4,1.9,.45,0xd6eaf8);f('Closet',cs<0?uA+.3:uB-.3,za+s2+1.7,.6,1.4,1.9,0x9c7a54)});
+ }));return a}
+const CAT={Cama:[1.4,1.9,.45,0xd6eaf8],'Sofá':[2,.9,.45,0x5d6d7e],Mesa:[.8,.8,.75,0xa9774b],Silla:[.3,.3,.45,0x7a5233],Closet:[.6,1.4,1.9,0x9c7a54],Nevera:[.7,.6,1.8,0xdfe4e8],Escritorio:[1.2,.6,.75,0x8b6b4a],Lavadora:[.6,.6,.9,0xeeeeee],Planta:[.4,.4,1,0x4f8a4f],Alfombra:[2,1.4,.03,0xb5651d],Pared:[2,.15,2.6,0xf5f1ea],Puerta:[.9,.15,2.1,0x8b5a2b],Ventana:[1.2,.15,1.1,0x9fd3e8,.9],'Cocina integral':[3,.6,1.8,0xb08968],'Mesón':[1.8,.6,.9,0xb08968],Estufa:[.6,.5,.03,0x222222,.9],Lavaplatos:[.7,.45,.03,0xc0c8d0,.9],Sanitario:[.4,.6,.4,0xffffff],Ducha:[.8,.8,.06,0x85c1e9],Lavamanos:[.4,.5,.8,0xffffff],Moto:0};
+const ACAB=[['Blanco',0xf5f1ea],['Arena',0xe3dccf],['Concreto',0xa0a4a8],['Ladrillo',0xb5651d],['Madera',0xa9774b],['Grafito',0x333b44],['Azul',0x1f3b5c],['Verde',0x6b8f71]];
+function moto(){const g=new THREE.Group(),d=M(0x222831),b=new THREE.Mesh(new THREE.BoxGeometry(.22,.3,1.1),M(0xc0392b));b.position.y=.55;
+ const s=new THREE.Mesh(new THREE.BoxGeometry(.25,.1,.5),d);s.position.set(0,.76,-.2);const h=new THREE.Mesh(new THREE.BoxGeometry(.6,.05,.05),d);h.position.set(0,.95,.45);g.add(b,s,h);
+ [-.6,.6].forEach(o=>{const w=new THREE.Mesh(new THREE.CylinderGeometry(.3,.3,.1,16),d);w.rotation.z=Math.PI/2;w.position.set(0,.3,o);g.add(w)});g.traverse(o=>o.castShadow=true);return g}
+function label(t,x,y,z,w){const k=document.createElement('canvas');k.width=256;k.height=96;const g=k.getContext('2d');g.fillStyle='#1f2a36';g.font='bold 28px system-ui';g.textAlign='center';
+ t.split('\n').forEach((l,i)=>g.fillText(l,128,38+i*34));const m=new THREE.Mesh(new THREE.PlaneGeometry(Math.min(w,2.6),Math.min(w,2.6)*.375),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(k),transparent:true}));
+ m.rotation.set(-Math.PI/2,0,Math.PI);m.position.set(x,y,z);G.add(m)}
+const sh=(c,f)=>(Math.min(255,(c>>16&255)*f)|0)<<16|(Math.min(255,(c>>8&255)*f)|0)<<8|(Math.min(255,(c&255)*f)|0);
+function pt(g,w,h,d,x,y,z,c){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),M(c));m.position.set(x,y+h/2,z);m.castShadow=m.receiveShadow=true;g.add(m)}
+function cy(g,r,h,x,y,z,c,t){const m=new THREE.Mesh(new THREE.CylinderGeometry(t||r,r,h,18),M(c));m.position.set(x,y+h/2,z);m.castShadow=true;g.add(m)}
+function MODELS(o){const{w,d,h,c,n}=o,g=new THREE.Group(),p=(...a)=>pt(g,...a);
+ if(o.dr){const L=Math.max(w,d),T=Math.min(w,d);
+  if(n==='Ventana'){const gl=new THREE.Mesh(new THREE.BoxGeometry(L-.08,h-.08,.02),new THREE.MeshLambertMaterial({color:c,transparent:true,opacity:.45}));gl.position.y=h/2;g.add(gl);
+   p(L,.05,T+.02,0,0,0,0xffffff);p(L,.05,T+.02,0,h-.05,0,0xffffff);p(.05,h,T+.02,-L/2+.025,0,0,0xffffff);p(.05,h,T+.02,L/2-.025,0,0,0xffffff);p(.04,h,.03,0,0,0,0xffffff);p(L+.12,.04,T+.1,0,-.02,0,0xeeeeee)}
+  else{const f=sh(c,.7);p(.05,h,T+.02,-L/2+.025,0,0,f);p(.05,h,T+.02,L/2-.025,0,0,f);p(L,.05,T+.02,0,h-.05,0,f);p(L-.1,h-.05,Math.max(.04,T*.4),0,0,0,c);p(.03,.03,T+.08,L/2-.14,h*.45,0,0xd4af37)}
+  return g}
+ if(n==='Cama'){const wd=0x8b6b4a;p(w,.25,d,0,0,0,wd);p(w-.06,.2,d-.06,0,.25,0,c);p(w-.06,.05,d*.6,0,.45,-d*.18,sh(c,.75));p(w*.4,.1,.35,-w*.22,.45,d/2-.3,0xffffff);p(w*.4,.1,.35,w*.22,.45,d/2-.3,0xffffff);p(w,.85,.08,0,0,d/2-.04,wd);return g}
+ if(n==='Sofá'){p(w,.25,d,0,0,0,sh(c,.7));[-1,1].forEach(s=>{p(w/2-.14,.15,d-.25,s*(w/4-.02),.25,.08,c);p(.15,.4,d,s*(w/2-.075),.2,0,sh(c,.8))});p(w,.55,.2,0,.2,-d/2+.1,sh(c,.9));return g}
+ if(/^Mesa|^Escritorio/.test(n)){p(w,.06,d,0,h-.06,0,c);[[1,1],[1,-1],[-1,1],[-1,-1]].forEach(s=>p(.06,h-.06,.06,s[0]*(w/2-.05),0,s[1]*(d/2-.05),sh(c,.7)));return g}
+ if(n==='Silla'){p(w,.05,d,0,h-.05,0,c);[[1,1],[1,-1],[-1,1],[-1,-1]].forEach(s=>p(.04,h-.05,.04,s[0]*(w/2-.03),0,s[1]*(d/2-.03),sh(c,.7)));p(w,.35,.04,0,h,-d/2+.02,c);return g}
+ if(n==='Closet'){p(w,h,d,0,0,0,c);[-1,1].forEach(s=>[-1,1].forEach(q=>{p(.01,h-.2,d/2-.04,s*(w/2+.005),.1,q*d/4,sh(c,1.15));p(.02,.3,.02,s*(w/2+.015),.9,q*.05,0x222222)}));return g}
+ if(n==='Nevera'){p(w,h,d,0,0,0,c);[-1,1].forEach(s=>{p(.01,.02,d,s*(w/2),h*.62,0,0x888888);p(.03,.4,.03,s*(w/2+.02),h*.72,d/2-.06,0x666666);p(.03,.7,.03,s*(w/2+.02),h*.25,d/2-.06,0x666666)});return g}
+ if(n==='Cocina integral'){const fw=.7,cw=w-fw,cx=-w/2+fw+cw/2,fx=-w/2+fw/2;p(fw,h,d,fx,0,0,0xdfe4e8);p(fw+.01,.02,d+.01,fx,h*.62,0,0x888888);p(.03,.4,.03,fx+fw/2-.08,h*.72,d/2+.02,0x666666);p(.03,.7,.03,fx+fw/2-.08,h*.25,d/2+.02,0x666666);
+  p(cw,.82,d,cx,0,0,c);p(cw+.02,.06,d+.02,cx,.82,0,0x4a4a4a);const k=Math.max(1,Math.round(cw/.5)),q=cw/k;for(let i=0;i<k;i++){p(q-.06,.62,.01,cx-cw/2+q*(i+.5),.12,d/2+.005,sh(c,.82));p(.1,.02,.02,cx-cw/2+q*(i+.5),.7,d/2+.02,0x222222)}
+  if(cw>1.6){const xs=cx-cw/4,xk=cx+cw/4;p(.6,.02,d-.1,xs,.88,0,0x222222);[[-1,-1],[-1,1],[1,-1],[1,1]].forEach(s=>cy(g,.08,.012,xs+s[0]*.15,.9,s[1]*.12,0x666666));p(.7,.02,d-.1,xk,.88,0,0xc0c8d0);p(.56,.02,.3,xk,.9,0,0x6c7a89);cy(g,.015,.2,xk,.9,-d/2+.06,0x999999)}return g}
+ if(n==='Mesón'){p(w,.82,d,0,0,0,c);p(w+.02,.06,d+.02,0,.82,0,0x4a4a4a);const k=Math.max(1,Math.round(w/.5)),q=w/k;for(let i=0;i<k;i++){p(q-.06,.62,.01,-w/2+q*(i+.5),.12,d/2+.005,sh(c,.82));p(.1,.02,.02,-w/2+q*(i+.5),.7,d/2+.02,0x222222)}return g}
+ if(n==='Estufa'){p(w,.03,d,0,0,0,0x222222);[[-1,-1],[-1,1],[1,-1],[1,1]].forEach(s=>cy(g,.08,.012,s[0]*w/4,.03,s[1]*d/4,0x666666));return g}
+ if(n==='Lavaplatos'){p(w,.03,d,0,0,0,0xc0c8d0);p(w-.14,.02,d-.14,0,.03,0,0x6c7a89);cy(g,.015,.18,0,.03,-d/2+.06,0x999999);return g}
+ if(n==='Sanitario'){p(w-.04,.4,.16,0,0,-d/2+.1,c);cy(g,.14,.38,0,.0,.06,c,.19);cy(g,.2,.03,0,.38,.06,0xeeeeee);return g}
+ if(n==='Lavamanos'){cy(g,.07,.65,0,0,0,c);p(w,.12,d,0,.68,0,c);return g}
+ if(n==='Ducha'){p(w,.06,d,0,0,0,c);p(.03,1.8,.03,w/2-.1,.06,-d/2+.05,0xaaaaaa);cy(g,.09,.03,w/2-.1,1.85,-d/2+.12,0xaaaaaa);return g}
+ if(n==='Lavadora'){p(w,h,d,0,0,0,c);p(.36,.36,.02,0,.25,d/2+.01,0x6c7a89);return g}
+ if(n==='Planta'){cy(g,.15,.3,0,0,0,0x8a5a44,.18);const s=new THREE.Mesh(new THREE.SphereGeometry(.28,12,10),M(0x4f8a4f));s.position.y=.65;s.castShadow=true;g.add(s);return g}
+ return null}
+function mkItem(o,y0){const g=MODELS(o);let m;
+ if(g)m=g;else{const b=new THREE.Mesh(new THREE.BoxGeometry(o.w,o.h,o.d),M(o.c));b.position.y=o.h/2;b.castShadow=b.receiveShadow=true;m=new THREE.Group();m.add(b)}
+ if(o.mx)m.scale.x=-1;m.position.set(o.x,y0+o.y,o.z);m.rotation.y=(o.r||0)+(o.dr&&o.d>o.w?Math.PI/2:0);G.add(m);
+ if(!g&&o.y===0&&o.h>=2&&/Pared|Muro/.test(o.n)){const s=new THREE.Mesh(new THREE.BoxGeometry(o.w+.02,.1,o.d+.02),M(0xd4cdbf));s.position.set(o.x,y0+.05,o.z);s.rotation.y=o.r||0;G.add(s)}
+ return m}
+function cutOpening(o){const fl=PR.floors[cur],hz=o.w>=o.d,c=hz?o.x:o.z,half=(hz?o.w:o.d)/2,s=c-half,e=c+half,oy=o.y,oh=o.h,ws=[];
+ fl.forEach((w,i)=>{if(w.k==='b'&&/Pared|Muro/.test(w.n)&&w.y===0&&w.h>=2&&((w.w>=w.d)===hz)&&Math.abs((hz?w.z:w.x)-(hz?o.z:o.x))<.12){const a=hz?w.x-w.w/2:w.z-w.d/2,b=a+(hz?w.w:w.d);if(s<b-.01&&e>a+.01)ws.push([i,a,b])}});
+ ws.sort((p,q)=>q[0]-p[0]).forEach(([i,a,b])=>{const w=fl[i];fl.splice(i,1);const mk=(p,q,y,h)=>{if(q-p<.02)return;const n=Object.assign({},w,{y,h});if(hz){n.x=(p+q)/2;n.w=q-p}else{n.z=(p+q)/2;n.d=q-p}fl.push(n)};
+  mk(a,Math.min(s,b),0,w.h);mk(Math.max(e,a),b,0,w.h);const m1=Math.max(s,a),m2=Math.min(e,b);mk(m1,m2,oy+oh,w.h-oy-oh);if(oy>0)mk(m1,m2,0,oy)})}
+function place(o,px,pz){const fl=PR.floors[cur],L=Math.max(o.w,o.d);px=px==null?o.x:px;pz=pz==null?o.z:pz;let best=null,bd=1e9;
+ fl.forEach(w=>{if(w.k==='b'&&/Pared|Muro/.test(w.n)&&w.y===0&&w.h>=2&&Math.max(w.w,w.d)>=L&&(o.gp==null||w.gp===o.gp)){const dd=Math.hypot(Math.max(Math.abs(px-w.x)-w.w/2,0),Math.max(Math.abs(pz-w.z)-w.d/2,0));if(dd<bd){bd=dd;best=w}}});
+ if(!best)return false;const hz=best.w>=best.d,T=Math.min(best.w,best.d),cl=(v,a,b)=>Math.round(Math.min(b,Math.max(a,v))*10)/10;
+ if(hz){o.w=L;o.d=T;o.z=best.z;o.x=cl(px,best.x-best.w/2+L/2,best.x+best.w/2-L/2)}else{o.w=T;o.d=L;o.x=best.x;o.z=cl(pz,best.z-best.d/2+L/2,best.z+best.d/2-L/2)}
+ o.r=0;o.gp=best.gp;cutOpening(o);return true}
+const fy=i=>i*(PR.H+.2);
+function build(){while(G.children.length)G.remove(G.children[0]);const {W,L,H}=PR;
+ ['cw','pd','gate','H'].forEach(k=>$('v_'+k).textContent=$(k).value);
+ const bx=(x,y,z,w,h,d,c)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),M(c));m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;G.add(m);return m};
+ bx(W/2,-.1,L/2,W+2,.2,L+2,0xb4b8b4);
+ PR.floors.forEach((items,fi)=>{if(fi>cur&&!WK&&$('allf').checked===false)return;if(fi>cur&&!WK)return;if(fi<cur&&!$('allf').checked&&!WK)return;const y0=fy(fi);
+  if(fi>0)bx(W/2,y0-.1,L/2,W,.2,L,0xcfc8bb);
+  items.forEach((o,i)=>{let m;
+   if(o.k==='b'){m=mkItem(o,y0)}
+   else if(o.k==='m'){m=moto();m.position.set(o.x,y0,o.z);m.rotation.y=o.r||0;G.add(m)}
+   else{bx(o.x,y0+.03,o.z,o.w,.04,o.d,o.c);if($('lab').checked&&!o.na&&o.n!=='Parqueadero')label(o.n+'\n'+(o.w*o.d).toFixed(1)+' m²',o.x,y0+.1,o.z,o.w);return}
+   m.userData={fi,i};if(fi===cur&&i===selI){m.traverse(c=>{if(c.isMesh)c.material=HL})}});});
+ GP.constant=-fy(cur);areas();fl()}
+function areas(){let h='';PR.floors.forEach((items,fi)=>{const rs=items.filter(o=>o.k==='r'&&!o.na&&o.n!=='Parqueadero'),t=rs.reduce((s,o)=>s+o.w*o.d,0);
+ h+=`<b>Piso ${fi+1}</b> · ${t.toFixed(1)} m²<table>`+rs.map(o=>`<tr><td>${o.n}</td><td>${(o.w*o.d).toFixed(1)} m²</td></tr>`).join('')+'</table><br>'});
+ const mt=PR.floors.flat().filter(o=>o.k==='m').length;$('ar').innerHTML=(h||'Sin cuartos definidos.')+`<small>Motos: ${mt} · Lote ${PR.W} × ${PR.L} m (${PR.W*PR.L} m²)</small>`}
+function fl(){$('fl').innerHTML='';PR.floors.forEach((_,i)=>{const b=document.createElement('button');b.textContent='Piso '+(i+1);if(i===cur)b.style.background='var(--ac)',b.style.color='#fff';b.onclick=()=>{cur=i;selI=-1;sel();build()};$('fl').appendChild(b)})}
+function sel(){const o=selI>=0&&PR.floors[cur][selI];$('sel').textContent=o?'Seleccionado: '+o.n:'Toca un objeto para seleccionarlo.';$('rz').style.display=o&&o.k==='b'&&!o.dr?'block':'none';if(o&&o.k==='b')['w','d','h'].forEach(k=>{$('r'+k).value=o[k];$('v_r'+k).textContent=(+o[k]).toFixed(2)})}
+const snap=()=>JSON.stringify(PR.floors),push=()=>{hist.push(snap());if(hist.length>40)hist.shift()};
+const cu=()=>PR.floors[cur][selI];
+function msg(t){$('msg').textContent=t}
+// proyecto
+$('n1').onclick=()=>{PR={W:12,L:20,cw:+$('cw').value,pd:+$('pd').value,gate:+$('gate').value,H:+$('H').value,floors:[[]]};PR.floors[0]=gen();cur=0;selI=-1;hist=[];home();build();msg('Plano cargado.')};
+$('n0').onclick=()=>{PR={W:+$('nw').value||12,L:+$('nl').value||20,cw:2.4,pd:4,gate:3,H:+$('H').value,floors:[[]]};cur=0;selI=-1;hist=[];$('ttl').textContent='Proyecto nuevo '+PR.W+' × '+PR.L+' m';home();build();msg('Proyecto en blanco. Usa Editar para agregar muros y muebles.')};
+$('rg').onclick=()=>{if(PR.W!==12||PR.L!==20){msg('La plantilla solo aplica a lotes de 12 × 20 m.');return}push();Object.assign(PR,{cw:+$('cw').value,pd:+$('pd').value,gate:+$('gate').value});PR.floors[cur]=gen();selI=-1;build()};
+$('H').oninput=()=>{PR.H=+$('H').value;build()};['cw','pd','gate'].forEach(k=>$(k).oninput=()=>{$('v_'+k).textContent=$(k).value});
+$('lab').onchange=build;$('allf').onchange=build;
+$('sv').onclick=async()=>{let loc=1;try{localStorage.setItem('d4rk3d4',JSON.stringify(PR))}catch(e){loc=0}
+ try{const db=await claude.use('db');if(!db)throw 0;await db.doc('proyecto/principal').set({json:JSON.stringify(PR),t:Date.now()});msg('Guardado. Se verá igual al abrirlo en otro dispositivo.')}catch(e){msg(loc?'Guardado solo en este dispositivo. Para verlo en otros, abre el enlace con tu cuenta o usa Copiar código.':'No se pudo guardar; usa Copiar código.')}};
+async function loadShared(){try{const db=await claude.use('db');if(!db)return;const s=await db.doc('proyecto/principal').get();if(s.exists){const o=JSON.parse(s.data().json);if(o&&o.floors){PR=o;cur=0;selI=-1;hist=[];['cw','pd','gate','H'].forEach(k=>{if(PR[k]!=null)$(k).value=PR[k]});home();build();msg('Proyecto guardado cargado.')}}}catch(e){}}
+$('cp').onclick=async()=>{const t=JSON.stringify(PR);$('code').value=t;try{await navigator.clipboard.writeText(t);msg('Código copiado: pégalo en un mensaje para compartirlo.')}catch(e){$('code').select();msg('Copia el texto manualmente.')}};
+$('ld').onclick=()=>{try{const o=JSON.parse($('code').value);if(!o.floors)throw 0;PR=o;cur=0;selI=-1;hist=[];home();build();msg('Proyecto cargado.')}catch(e){msg('Código no válido.')}};
+// pisos
+$('f1').onclick=()=>{push();PR.floors.push(JSON.parse(JSON.stringify(PR.floors[cur])).filter(o=>o.k!=='m'&&o.n!=='Portón'&&o.n!=='Muro frente'));cur=PR.floors.length-1;selI=-1;build()};
+$('f0').onclick=()=>{push();PR.floors.push([]);cur=PR.floors.length-1;selI=-1;build()};
+$('fd').onclick=()=>{if(PR.floors.length<2){msg('Debe quedar al menos un piso.');return}push();PR.floors.splice(cur,1);cur=Math.max(0,cur-1);selI=-1;build()};
+// edición
+$('em').onchange=()=>{EM=$('em').checked;$('ed').style.display=EM?'block':'none';selI=-1;sel();build()};
+$('e_rot').onclick=()=>{if(selI<0||cu().dr||cu().gp!=null)return;push();cu().r=((cu().r||0)+Math.PI/2)%(Math.PI*2);build()};
+$('e_del').onclick=()=>{if(selI<0)return;push();{const o=cu();PR.floors[cur]=PR.floors[cur].filter(q=>o.gp==null||o.dr?q!==o:q.gp!==o.gp)}selI=-1;sel();build()};
+$('e_dup').onclick=()=>{if(selI<0)return;push();const o=Object.assign({},cu());delete o.gp;o.x+=.4;o.z+=.4;PR.floors[cur].push(o);selI=PR.floors[cur].length-1;sel();build()};
+$('e_und').onclick=()=>{const x=hist.pop();if(!x)return;PR.floors=JSON.parse(x);cur=Math.min(cur,PR.floors.length-1);selI=-1;sel();build()};
+$('col').oninput=()=>{if(selI<0||cu().k!=='b')return;cu().c=parseInt($('col').value.slice(1),16);build()};
+ACAB.forEach(([n,c])=>{const b=document.createElement('button');b.textContent=n;b.style.borderLeft='10px solid #'+c.toString(16).padStart(6,'0');b.onclick=()=>{if(selI<0||cu().k!=='b')return;push();cu().c=c;build()};$('sw').appendChild(b)});
+Object.keys(CAT).forEach(n=>{const b=document.createElement('button');b.textContent='+ '+n;b.onclick=()=>{push();const c=CAT[n];const it0=c?{k:'b',x:T0.x,z:T0.z,w:c[0],d:c[1],h:c[2],y:c[4]||0,c:c[3],n,r:0}:{k:'m',x:T0.x,z:T0.z,r:0,n:'Moto'};if(n==='Puerta'||n==='Ventana'){it0.dr=1;if(!place(it0,T0.x,T0.z)){hist.pop();$('sel').textContent='No hay muros en este piso para poner la '+n.toLowerCase()+'.';return}}if(n==='Pared')it0.gp=Date.now()+Math.random();PR.floors[cur].push(it0);selI=PR.floors[cur].length-1;sel();build()};$('add').appendChild(b)});
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.s').forEach(s=>s.classList.toggle('on',s.id==='s_'+b.dataset.t))});
+['w','d','h'].forEach(k=>{const e=$('r'+k);e.onpointerdown=()=>{if(selI>=0)push()};e.oninput=()=>{if(selI<0)return;const o=cu();if(!o||o.k!=='b'||o.dr)return;o[k]=+e.value;$('v_r'+k).textContent=(+e.value).toFixed(2);build()}});
+function nudge(dx,dz){if(selI<0)return;push();const t=cu();(t.gp!=null&&!t.dr?PR.floors[cur].filter(q=>q.gp===t.gp):[t]).forEach(q=>{q.x=Math.round((q.x+dx)*10)/10;q.z=Math.round((q.z+dz)*10)/10});if(t.dr){place(t);selI=PR.floors[cur].indexOf(t)}build()}
+[['◀',-.1,0],['▶',.1,0],['▲',0,-.1],['▼',0,.1]].forEach(([l,x,z])=>{const b=document.createElement('button');b.textContent=l;b.onclick=()=>nudge(x,z);$('nd').appendChild(b)});
+// cámara
+const T0=new THREE.Vector3(6,1,10);let th=3.6,ph=.95,d=32,yaw=Math.PI,pit=0;const wp=new THREE.Vector3(),mv={f:0,t:0};
+function home(){T0.set(PR.W/2,1,PR.L/2);d=Math.max(PR.W,PR.L)*1.6;upd()}
+function upd(){if(WK){cam.position.set(wp.x,fy(cur)+1.6,wp.z);cam.rotation.set(pit,yaw,0);return}
+ cam.position.set(T0.x+d*Math.sin(ph)*Math.sin(th),T0.y+d*Math.cos(ph),T0.z+d*Math.sin(ph)*Math.cos(th));cam.lookAt(T0)}
+$('b4').onclick=()=>{WK=true;wp.set(PR.W/2,0,Math.min(PR.L-1,PR.pd+1));yaw=Math.PI;pit=0;$('p').classList.add('h');$('wk').style.display='flex';build();upd()};
+$('wx').onclick=()=>{WK=false;$('wk').style.display='none';$('p').classList.remove('h');build();upd()};
+[['wf','f',1],['wb','f',-1],['wl','t',1],['wr','t',-1]].forEach(([id,k,v])=>{const b=$(id);b.onpointerdown=()=>mv[k]=v;b.onpointerup=b.onpointerleave=b.onpointercancel=()=>mv[k]=0});
+function view(t,p){WK=false;th=t;ph=p;T0.set(PR.W/2,1,PR.L/2);upd()}
+$('b1').onclick=()=>view(3.6,.95);$('b2').onclick=()=>view(Math.PI,1.35);$('b3').onclick=()=>view(Math.PI,.001);
+const ptr=new Map();let pd0=0;
+function ground(e){const r=cv.getBoundingClientRect();RC.setFromCamera({x:(e.clientX-r.left)/r.width*2-1,y:-((e.clientY-r.top)/r.height)*2+1},cam);const p=new THREE.Vector3();return RC.ray.intersectPlane(GP,p)?p:null}
+function pick(e){ground(e);for(const h of RC.intersectObjects(G.children,true)){let o=h.object;while(o&&!o.userData.fi!==undefined&&o.parent!==G)o=o.parent;if(o&&o.userData&&o.userData.fi===cur)return o.userData.i}return -1}
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptr.set(e.pointerId,e);
+ if(ptr.size===2){drag=null;const[a,b]=[...ptr.values()];pd0=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);return}
+ if(EM&&!WK){selI=pick(e);sel();build();if(selI>=0){const p=ground(e),o=cu();if(p)drag={id:e.pointerId,ox:o.x-p.x,oz:o.z-p.z,s:snap(),mv:0}}}});
+const up=e=>{if(drag&&drag.id===e.pointerId){if(drag.mv){hist.push(drag.s);const o=cu();if(o&&o.dr){place(o);selI=PR.floors[cur].indexOf(o);build()}}drag=null}ptr.delete(e.pointerId)};
+cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+cv.addEventListener('pointermove',e=>{const o=ptr.get(e.pointerId);if(!o)return;
+ if(drag&&drag.id===e.pointerId){const p=ground(e);if(p){const t=cu(),nx=Math.round((p.x+drag.ox)*10)/10,nz=Math.round((p.z+drag.oz)*10)/10,ddx=nx-t.x,ddz=nz-t.z;(t.gp!=null&&!t.dr?PR.floors[cur].filter(q=>q.gp===t.gp):[t]).forEach(q=>{q.x=Math.round((q.x+ddx)*10)/10;q.z=Math.round((q.z+ddz)*10)/10});drag.mv=1;build()}ptr.set(e.pointerId,e);return}
+ const dx=e.clientX-o.clientX,dy=e.clientY-o.clientY;
+ if(WK){yaw-=dx*.005;pit=Math.max(-1.2,Math.min(1.2,pit-dy*.005))}
+ else if(ptr.size===2){ptr.set(e.pointerId,e);const[a,b]=[...ptr.values()],n=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);d=Math.min(80,Math.max(6,d*pd0/n));pd0=n}
+ else{th-=dx*.006;ph=Math.min(1.5,Math.max(.001,ph-dy*.006))}
+ ptr.set(e.pointerId,e);upd()});
+cv.addEventListener('wheel',e=>{e.preventDefault();d=Math.min(80,Math.max(6,d*(1+e.deltaY*.001)));upd()},{passive:false});
+addEventListener('keydown',e=>{if(WK){const k=e.key.toLowerCase();if(k==='w'||k==='arrowup')mv.f=1;if(k==='s'||k==='arrowdown')mv.f=-1;if(k==='a'||k==='arrowleft')mv.t=1;if(k==='d'||k==='arrowright')mv.t=-1}
+ else if(EM){if(e.key==='Delete')$('e_del').onclick();else if(e.key.toLowerCase()==='r')$('e_rot').onclick()}});
+addEventListener('keyup',()=>{mv.f=mv.t=0});
+$('m').onclick=()=>$('p').classList.toggle('h');
+function rs(){R.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
+addEventListener('resize',rs);rs();
+PR.floors[0]=gen();
+const SAVED={"W":12,"L":20,"cw":2.4,"pd":4,"gate":3,"H":2.6,"floors":[[{"k":"r","x":6,"z":2,"w":12,"d":4,"c":10527912,"n":"Parqueadero"},{"k":"r","x":6,"z":12,"w":2.4,"d":16,"c":14275267,"n":"Pasillo","na":1},{"k":"b","x":6,"z":0,"w":3,"d":0.2,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":1},{"k":"b","x":2.25,"z":0,"w":4.5,"d":0.2,"h":2.4,"y":0,"c":14933199,"n":"Muro frente","r":0,"gp":1},{"k":"b","x":6,"z":0,"w":3,"d":0.2,"h":0.2999999999999998,"y":2.1,"c":14933199,"n":"Muro frente","r":0,"gp":1},{"k":"b","x":9.75,"z":0,"w":4.5,"d":0.2,"h":2.4,"y":0,"c":14933199,"n":"Muro frente","r":0,"gp":1},{"k":"b","x":0,"z":2,"w":0.2,"d":4,"h":2.4,"y":0,"c":14933199,"n":"Pared","r":0,"gp":2},{"k":"b","x":12,"z":2,"w":0.2,"d":4,"h":2.4,"y":0,"c":14933199,"n":"Pared","r":0,"gp":3},{"k":"b","x":6,"z":0,"w":3,"d":0.08,"h":2.1,"y":0,"c":2046812,"n":"Portón","r":0},{"k":"m","x":0.5,"z":2.85,"r":0,"n":"Moto"},{"k":"m","x":1.3,"z":2.85,"r":0,"n":"Moto"},{"k":"m","x":2.1,"z":2.85,"r":0,"n":"Moto"},{"k":"m","x":2.9000000000000004,"z":2.85,"r":0,"n":"Moto"},{"k":"m","x":3.7,"z":2.85,"r":0,"n":"Moto"},{"k":"m","x":11.5,"z":2.85,"r":0,"n":"Moto"},{"k":"m","x":10.7,"z":2.85,"r":0,"n":"Moto"},{"k":"m","x":9.9,"z":2.85,"r":0,"n":"Moto"},{"k":"m","x":9.1,"z":2.85,"r":0,"n":"Moto"},{"k":"m","x":8.3,"z":2.85,"r":0,"n":"Moto"},{"k":"b","x":0,"z":8,"w":0.15,"d":8,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":4},{"k":"b","x":2.4,"z":4,"w":4.8,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":5},{"k":"b","x":4.8,"z":5.5,"w":0.15,"d":1,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":6},{"k":"b","x":4.8,"z":4.5,"w":0.15,"d":1,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":6},{"k":"b","x":4.8,"z":5.5,"w":0.15,"d":1,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":6},{"k":"b","x":4.8,"z":9,"w":0.15,"d":6,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":6},{"k":"b","x":0.7679999999999998,"z":7,"w":1.5359999999999996,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":7},{"k":"b","x":2,"z":8.6,"w":0.8,"d":0.15,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":8},{"k":"b","x":2.832,"z":8.6,"w":0.8,"d":0.15,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":8},{"k":"b","x":0.39999999999999997,"z":8.6,"w":0.7999999999999999,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":8},{"k":"b","x":1.2,"z":8.6,"w":0.8000000000000002,"d":0.15,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":8},{"k":"b","x":2.832,"z":8.6,"w":0.7999999999999998,"d":0.15,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":8},{"k":"b","x":4.016,"z":8.6,"w":1.568,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":8},{"k":"b","x":1.5359999999999996,"z":7.8,"w":0.15,"d":0.7,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":9},{"k":"b","x":1.5359999999999996,"z":7.225,"w":0.15,"d":0.44999999999999984,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":9},{"k":"b","x":1.5359999999999996,"z":7.8,"w":0.15,"d":0.7000000000000001,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":9},{"k":"b","x":1.5359999999999996,"z":8.375,"w":0.15,"d":0.44999999999999973,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":9},{"k":"b","x":2.4,"z":10.3,"w":0.15,"d":3.4000000000000004,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":10},{"k":"r","x":2.4,"z":5.5,"w":4.8,"d":3,"c":15260085,"n":"Sala-comedor A1"},{"k":"r","x":0.7679999999999998,"z":7.8,"w":1.5359999999999996,"d":1.5999999999999996,"c":12376550,"n":"Baño A1"},{"k":"r","x":3.1679999999999997,"z":7.8,"w":3.2640000000000002,"d":1.5999999999999996,"c":14542544,"n":"Cocina A1"},{"k":"r","x":1.2,"z":10.3,"w":2.4,"d":3.4000000000000004,"c":15780297,"n":"Hab. 1 A1"},{"k":"r","x":3.5999999999999996,"z":10.3,"w":2.4,"d":3.4000000000000004,"c":13230281,"n":"Hab. 2 A1"},{"k":"b","x":1.92,"z":4.55,"w":2,"d":0.9,"h":0.45,"y":0,"c":6122878,"n":"Sofá","r":0},{"k":"b","x":1.92,"z":5.6,"w":1,"d":0.5,"h":0.35,"y":0,"c":9136970,"n":"Mesa de centro","r":0},{"k":"b","x":0.2,"z":5.7,"w":0.4,"d":1.2,"h":0.5,"y":0,"c":3355443,"n":"Mueble TV","r":0},{"k":"b","x":0.12,"z":5.7,"w":0.06,"d":0.9,"h":0.5,"y":0.8,"c":1118481,"n":"TV","r":0},{"k":"b","x":4.4,"z":7.5,"w":2.15,"d":0.6,"h":1.8,"y":0,"c":11569512,"n":"Cocina integral","r":1.5707963267948966,"mx":false},{"k":"b","x":0.4,"z":7.4,"w":0.8,"d":0.8,"h":0.05,"y":0,"c":8765929,"n":"Ducha","r":0},{"k":"b","x":0.2,"z":8.25,"w":0.4,"d":0.6,"h":0.4,"y":0,"c":16777215,"n":"Sanitario","r":3.141592653589793},{"k":"b","x":1.2359999999999995,"z":7.3,"w":0.4,"d":0.5,"h":0.8,"y":0,"c":16777215,"n":"Lavamanos","r":0},{"k":"b","x":1.45,"z":11,"w":1.4,"d":1.9,"h":0.45,"y":0,"c":14084856,"n":"Cama","r":0},{"k":"b","x":0.3,"z":10.299999999999999,"w":0.6,"d":1.4,"h":1.9,"y":0,"c":10254932,"n":"Closet","r":0},{"k":"b","x":3.3499999999999996,"z":11,"w":1.4,"d":1.9,"h":0.45,"y":0,"c":14084856,"n":"Cama","r":0},{"k":"b","x":4.5,"z":10.299999999999999,"w":0.6,"d":1.4,"h":1.9,"y":0,"c":10254932,"n":"Closet","r":0},{"k":"b","x":0,"z":16,"w":0.15,"d":8,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":11},{"k":"b","x":2.4,"z":12,"w":4.8,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":12},{"k":"b","x":2.4,"z":20,"w":4.8,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":13},{"k":"b","x":4.8,"z":13.5,"w":0.15,"d":1,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":14},{"k":"b","x":4.8,"z":12.5,"w":0.15,"d":1,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":14},{"k":"b","x":4.8,"z":13.5,"w":0.15,"d":1,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":14},{"k":"b","x":4.8,"z":17,"w":0.15,"d":6,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":14},{"k":"b","x":0.7679999999999998,"z":15,"w":1.5359999999999996,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":15},{"k":"b","x":2,"z":16.6,"w":0.8,"d":0.15,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":16},{"k":"b","x":2.832,"z":16.6,"w":0.8,"d":0.15,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":16},{"k":"b","x":0.39999999999999997,"z":16.6,"w":0.7999999999999999,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":16},{"k":"b","x":1.2,"z":16.6,"w":0.8000000000000002,"d":0.15,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":16},{"k":"b","x":2.832,"z":16.6,"w":0.7999999999999998,"d":0.15,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":16},{"k":"b","x":4.016,"z":16.6,"w":1.568,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":16},{"k":"b","x":1.5359999999999996,"z":15.8,"w":0.15,"d":0.7,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":17},{"k":"b","x":1.5359999999999996,"z":15.225,"w":0.15,"d":0.44999999999999984,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":17},{"k":"b","x":1.5359999999999996,"z":15.8,"w":0.15,"d":0.7000000000000001,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":17},{"k":"b","x":1.5359999999999996,"z":16.375,"w":0.15,"d":0.4500000000000015,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":17},{"k":"b","x":2.4,"z":18.3,"w":0.15,"d":3.3999999999999986,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":18},{"k":"r","x":2.4,"z":13.5,"w":4.8,"d":3,"c":15260085,"n":"Sala-comedor A2"},{"k":"r","x":0.7679999999999998,"z":15.8,"w":1.5359999999999996,"d":1.6000000000000014,"c":12376550,"n":"Baño A2"},{"k":"r","x":3.1679999999999997,"z":15.8,"w":3.2640000000000002,"d":1.6000000000000014,"c":14542544,"n":"Cocina A2"},{"k":"r","x":1.2,"z":18.3,"w":2.4,"d":3.3999999999999986,"c":15780297,"n":"Hab. 1 A2"},{"k":"r","x":3.5999999999999996,"z":18.3,"w":2.4,"d":3.3999999999999986,"c":13230281,"n":"Hab. 2 A2"},{"k":"b","x":1.92,"z":12.55,"w":2,"d":0.9,"h":0.45,"y":0,"c":6122878,"n":"Sofá","r":0},{"k":"b","x":1.92,"z":13.6,"w":1,"d":0.5,"h":0.35,"y":0,"c":9136970,"n":"Mesa de centro","r":0},{"k":"b","x":0.2,"z":13.7,"w":0.4,"d":1.2,"h":0.5,"y":0,"c":3355443,"n":"Mueble TV","r":0},{"k":"b","x":0.12,"z":13.7,"w":0.06,"d":0.9,"h":0.5,"y":0.8,"c":1118481,"n":"TV","r":0},{"k":"b","x":4.4,"z":15.4,"w":2.15,"d":0.6,"h":1.8,"y":0,"c":11569512,"n":"Cocina integral","r":1.5707963267948966,"mx":false},{"k":"b","x":0.4,"z":15.4,"w":0.8,"d":0.8,"h":0.05,"y":0,"c":8765929,"n":"Ducha","r":0},{"k":"b","x":0.2,"z":16.25,"w":0.4,"d":0.6,"h":0.4,"y":0,"c":16777215,"n":"Sanitario","r":3.141592653589793},{"k":"b","x":1.2359999999999995,"z":15.3,"w":0.4,"d":0.5,"h":0.8,"y":0,"c":16777215,"n":"Lavamanos","r":0},{"k":"b","x":1.45,"z":19,"w":1.4,"d":1.9,"h":0.45,"y":0,"c":14084856,"n":"Cama","r":0},{"k":"b","x":0.3,"z":18.3,"w":0.6,"d":1.4,"h":1.9,"y":0,"c":10254932,"n":"Closet","r":0},{"k":"b","x":3.3499999999999996,"z":19,"w":1.4,"d":1.9,"h":0.45,"y":0,"c":14084856,"n":"Cama","r":0},{"k":"b","x":4.5,"z":18.3,"w":0.6,"d":1.4,"h":1.9,"y":0,"c":10254932,"n":"Closet","r":0},{"k":"b","x":12,"z":8,"w":0.15,"d":8,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":19},{"k":"b","x":9.6,"z":4,"w":4.8,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":20},{"k":"b","x":7.2,"z":5.5,"w":0.15,"d":1,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":21},{"k":"b","x":7.2,"z":4.5,"w":0.15,"d":1,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":21},{"k":"b","x":7.2,"z":5.5,"w":0.15,"d":1,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":21},{"k":"b","x":7.2,"z":9,"w":0.15,"d":6,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":21},{"k":"b","x":11.232,"z":7,"w":1.5359999999999996,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":22},{"k":"b","x":10,"z":8.6,"w":0.8,"d":0.15,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":23},{"k":"b","x":9.168,"z":8.6,"w":0.8,"d":0.15,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":23},{"k":"b","x":11.6,"z":8.6,"w":0.7999999999999999,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":23},{"k":"b","x":10.8,"z":8.6,"w":0.8000000000000002,"d":0.15,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":23},{"k":"b","x":9.168,"z":8.6,"w":0.7999999999999998,"d":0.15,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":23},{"k":"b","x":7.984,"z":8.6,"w":1.568,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":23},{"k":"b","x":10.464,"z":7.8,"w":0.15,"d":0.7,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":24},{"k":"b","x":10.464,"z":7.225,"w":0.15,"d":0.44999999999999984,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":24},{"k":"b","x":10.464,"z":7.8,"w":0.15,"d":0.7000000000000001,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":24},{"k":"b","x":10.464,"z":8.375,"w":0.15,"d":0.44999999999999973,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":24},{"k":"b","x":9.6,"z":10.3,"w":0.15,"d":3.4000000000000004,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":25},{"k":"r","x":9.6,"z":5.5,"w":4.8,"d":3,"c":15260085,"n":"Sala-comedor B1"},{"k":"r","x":11.232,"z":7.8,"w":1.5359999999999996,"d":1.5999999999999996,"c":12376550,"n":"Baño B1"},{"k":"r","x":8.832,"z":7.8,"w":3.2640000000000002,"d":1.5999999999999996,"c":14542544,"n":"Cocina B1"},{"k":"r","x":10.8,"z":10.3,"w":2.4,"d":3.4000000000000004,"c":15780297,"n":"Hab. 1 B1"},{"k":"r","x":8.4,"z":10.3,"w":2.4,"d":3.4000000000000004,"c":13230281,"n":"Hab. 2 B1"},{"k":"b","x":10.08,"z":4.55,"w":2,"d":0.9,"h":0.45,"y":0,"c":6122878,"n":"Sofá","r":0},{"k":"b","x":10.08,"z":5.6,"w":1,"d":0.5,"h":0.35,"y":0,"c":9136970,"n":"Mesa de centro","r":0},{"k":"b","x":11.8,"z":5.7,"w":0.4,"d":1.2,"h":0.5,"y":0,"c":3355443,"n":"Mueble TV","r":0},{"k":"b","x":11.88,"z":5.7,"w":0.06,"d":0.9,"h":0.5,"y":0.8,"c":1118481,"n":"TV","r":0},{"k":"b","x":7.6,"z":6.3,"w":0.3,"d":0.3,"h":0.45,"y":0,"c":8016435,"n":"Silla","r":0},{"k":"b","x":7.6,"z":7.3,"w":2.35,"d":0.6,"h":1.8,"y":0,"c":11569512,"n":"Cocina integral","r":4.71238898038469,"mx":true},{"k":"b","x":11.6,"z":7.4,"w":0.8,"d":0.8,"h":0.05,"y":0,"c":8765929,"n":"Ducha","r":0},{"k":"b","x":11.8,"z":8.25,"w":0.4,"d":0.6,"h":0.4,"y":0,"c":16777215,"n":"Sanitario","r":3.141592653589793},{"k":"b","x":10.764000000000001,"z":7.3,"w":0.4,"d":0.5,"h":0.8,"y":0,"c":16777215,"n":"Lavamanos","r":0},{"k":"b","x":10.55,"z":11,"w":1.4,"d":1.9,"h":0.45,"y":0,"c":14084856,"n":"Cama","r":0},{"k":"b","x":11.7,"z":10.299999999999999,"w":0.6,"d":1.4,"h":1.9,"y":0,"c":10254932,"n":"Closet","r":0},{"k":"b","x":8.65,"z":11,"w":1.4,"d":1.9,"h":0.45,"y":0,"c":14084856,"n":"Cama","r":0},{"k":"b","x":7.5,"z":10.299999999999999,"w":0.6,"d":1.4,"h":1.9,"y":0,"c":10254932,"n":"Closet","r":0},{"k":"b","x":12,"z":16,"w":0.15,"d":8,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":26},{"k":"b","x":9.6,"z":12,"w":4.8,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":27},{"k":"b","x":9.6,"z":20,"w":4.8,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":28},{"k":"b","x":7.2,"z":13.5,"w":0.15,"d":1,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":29},{"k":"b","x":7.2,"z":12.5,"w":0.15,"d":1,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":29},{"k":"b","x":7.2,"z":13.5,"w":0.15,"d":1,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":29},{"k":"b","x":7.2,"z":17,"w":0.15,"d":6,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":29},{"k":"b","x":11.232,"z":15,"w":1.5359999999999996,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":30},{"k":"b","x":10,"z":16.6,"w":0.8,"d":0.15,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":31},{"k":"b","x":9.168,"z":16.6,"w":0.8,"d":0.15,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":31},{"k":"b","x":11.6,"z":16.6,"w":0.7999999999999999,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":31},{"k":"b","x":10.8,"z":16.6,"w":0.8000000000000002,"d":0.15,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":31},{"k":"b","x":9.168,"z":16.6,"w":0.7999999999999998,"d":0.15,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":31},{"k":"b","x":7.984,"z":16.6,"w":1.568,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":31},{"k":"b","x":10.464,"z":15.8,"w":0.15,"d":0.7,"h":2.1,"y":0,"c":9132587,"n":"Puerta","r":0,"dr":1,"gp":32},{"k":"b","x":10.464,"z":15.225,"w":0.15,"d":0.44999999999999984,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":32},{"k":"b","x":10.464,"z":15.8,"w":0.15,"d":0.7000000000000001,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":32},{"k":"b","x":10.464,"z":16.375,"w":0.15,"d":0.4500000000000015,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":32},{"k":"b","x":9.6,"z":18.3,"w":0.15,"d":3.3999999999999986,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":33},{"k":"r","x":9.6,"z":13.5,"w":4.8,"d":3,"c":15260085,"n":"Sala-comedor B2"},{"k":"r","x":11.232,"z":15.8,"w":1.5359999999999996,"d":1.6000000000000014,"c":12376550,"n":"Baño B2"},{"k":"r","x":8.832,"z":15.8,"w":3.2640000000000002,"d":1.6000000000000014,"c":14542544,"n":"Cocina B2"},{"k":"r","x":10.8,"z":18.3,"w":2.4,"d":3.3999999999999986,"c":15780297,"n":"Hab. 1 B2"},{"k":"r","x":8.4,"z":18.3,"w":2.4,"d":3.3999999999999986,"c":13230281,"n":"Hab. 2 B2"},{"k":"b","x":10.08,"z":12.55,"w":2,"d":0.9,"h":0.45,"y":0,"c":6122878,"n":"Sofá","r":0},{"k":"b","x":10.08,"z":13.6,"w":1,"d":0.5,"h":0.35,"y":0,"c":9136970,"n":"Mesa de centro","r":0},{"k":"b","x":11.8,"z":13.7,"w":0.4,"d":1.2,"h":0.5,"y":0,"c":3355443,"n":"Mueble TV","r":0},{"k":"b","x":11.88,"z":13.7,"w":0.06,"d":0.9,"h":0.5,"y":0.8,"c":1118481,"n":"TV","r":0},{"k":"b","x":7.6,"z":14.3,"w":0.3,"d":0.3,"h":0.45,"y":0,"c":8016435,"n":"Silla","r":0},{"k":"b","x":7.7,"z":15.5,"w":2.15,"d":0.6,"h":1.8,"y":0,"c":11569512,"n":"Cocina integral","r":4.71238898038469,"mx":true},{"k":"b","x":11.6,"z":15.4,"w":0.8,"d":0.8,"h":0.05,"y":0,"c":8765929,"n":"Ducha","r":0},{"k":"b","x":11.8,"z":16.25,"w":0.4,"d":0.6,"h":0.4,"y":0,"c":16777215,"n":"Sanitario","r":3.141592653589793},{"k":"b","x":10.764000000000001,"z":15.3,"w":0.4,"d":0.5,"h":0.8,"y":0,"c":16777215,"n":"Lavamanos","r":0},{"k":"b","x":10.55,"z":19,"w":1.4,"d":1.9,"h":0.45,"y":0,"c":14084856,"n":"Cama","r":0},{"k":"b","x":11.7,"z":18.3,"w":0.6,"d":1.4,"h":1.9,"y":0,"c":10254932,"n":"Closet","r":0},{"k":"b","x":8.65,"z":19,"w":1.4,"d":1.9,"h":0.45,"y":0,"c":14084856,"n":"Cama","r":0},{"k":"b","x":7.5,"z":18.3,"w":0.6,"d":1.4,"h":1.9,"y":0,"c":10254932,"n":"Closet","r":0},{"k":"b","x":9.584,"z":8.6,"w":0.03200000000000003,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":23},{"k":"b","x":10,"z":8.6,"w":0.7999999999999989,"d":0.15,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":23},{"k":"b","x":9.584,"z":16.6,"w":0.03200000000000003,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":31},{"k":"b","x":10,"z":16.6,"w":0.7999999999999989,"d":0.15,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":31},{"k":"b","x":2.416,"z":8.6,"w":0.03200000000000003,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":8},{"k":"b","x":2,"z":8.6,"w":0.7999999999999998,"d":0.15,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":8},{"k":"b","x":2.416,"z":16.6,"w":0.03200000000000003,"d":0.15,"h":2.6,"y":0,"c":16118250,"n":"Pared","r":0,"gp":16},{"k":"b","x":2,"z":16.6,"w":0.7999999999999998,"d":0.15,"h":0.5,"y":2.1,"c":16118250,"n":"Pared","r":0,"gp":16}]]};
+if(SAVED&&SAVED.floors)PR=SAVED;
+try{const s=localStorage.getItem('d4rk3d4');if(s){const o=JSON.parse(s);if(o&&o.floors)PR=o}}catch(e){}
+['cw','pd','gate','H'].forEach(k=>$(k).value=PR[k]);
+home();build();loadShared();
+(function loop(){requestAnimationFrame(loop);if(WK){yaw+=mv.t*.03;wp.x=Math.min(PR.W-.3,Math.max(.3,wp.x-Math.sin(yaw)*mv.f*.06));wp.z=Math.min(PR.L-.3,Math.max(.3,wp.z-Math.cos(yaw)*mv.f*.06));upd()}R.render(S,cam)})();
+</script></body></html>
